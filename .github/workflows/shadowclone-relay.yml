@@ -1,0 +1,91 @@
+name: Shadowclone relay
+on:
+  issues:
+    types: [opened, labeled, unlabeled]
+  issue_comment:
+    types: [created, edited]
+  pull_request_review_comment:
+    types: [created, edited]
+  pull_request_review:
+    types: [submitted]
+  pull_request_target:
+    types: [labeled, unlabeled, opened, ready_for_review]
+  workflow_run:
+    workflows: ["*"]
+    types: [completed]
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+  actions: write
+jobs:
+  relay:
+    if: github.repository_id == '1413519122'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: "main"
+          persist-credentials: false
+      - uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd
+        with:
+          script: |
+            const config = {
+              "repositoryId": 1413519122,
+              "repository": "theonly1me/code-review-bench-cases",
+              "defaultBranch": "main",
+              "owner": "theonly1me",
+              "identity": {
+                "kind": "app",
+                "appId": 5266211
+              },
+              "botId": 340720748,
+              "botLogin": "shadowclone-reviewer[bot]",
+              "skillsRepository": "theonly1me/shadowclone-skills",
+              "requesters": [
+                "theonly1me"
+              ],
+              "reviewerBots": [
+                "coderabbitai[bot]",
+                "github-actions[bot]"
+              ],
+              "maximumRuns": 10,
+              "reviewModel": "claude-opus-5-5",
+              "reviewNetwork": true,
+              "engine": "claude",
+              "codexAuth": "api-key"
+            };
+            const { resolveTrigger } = require('./.github/shadowclone/guard/events.cjs');
+            const { cancelBranchWork } = require('./.github/shadowclone/guard/policy.cjs');
+            const request = github.request.bind(github);
+            const trigger = await resolveTrigger({ clone: config, context, request });
+
+            if (!trigger) {
+              return;
+            }
+
+            if (trigger.kind === 'pause') {
+              await cancelBranchWork({
+                clone: config,
+                request,
+                branch: trigger.branch,
+              });
+
+              return;
+            }
+
+            await github.rest.actions.createWorkflowDispatch({
+              ...context.repo,
+              workflow_id: 'shadowclone.yml',
+              ref: config.defaultBranch,
+              inputs: {
+                source: trigger.source,
+                identifier: String(trigger.identifier),
+                entity: String(trigger.entity),
+                branch: trigger.branch,
+                head: trigger.head,
+                key: trigger.key,
+                action: String(context.payload.action || ''),
+              },
+            });
