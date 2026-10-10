@@ -293,7 +293,7 @@ jobs:
       - name: Install Shadowclone
         working-directory: ${{ runner.temp }}
         run: |
-          npm install --global --ignore-scripts --no-audit --no-fund --prefix "$RUNNER_TEMP/shadowclone" "@shadowclone/cli@0.0.27"
+          npm install --global --ignore-scripts --no-audit --no-fund --prefix "$RUNNER_TEMP/shadowclone" "@shadowclone/cli@0.0.28"
       - name: Collect the context and run the built-in rules
         working-directory: ${{ runner.temp }}
         env:
@@ -328,7 +328,7 @@ jobs:
       - name: Install Shadowclone
         working-directory: ${{ runner.temp }}
         run: |
-          npm install --global --ignore-scripts --no-audit --no-fund --prefix "$RUNNER_TEMP/shadowclone" "@shadowclone/cli@0.0.27"
+          npm install --global --ignore-scripts --no-audit --no-fund --prefix "$RUNNER_TEMP/shadowclone" "@shadowclone/cli@0.0.28"
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
         with:
           name: review-packet
@@ -388,7 +388,7 @@ jobs:
       - name: Install Shadowclone
         working-directory: ${{ runner.temp }}
         run: |
-          npm install --global --ignore-scripts --no-audit --no-fund --prefix "$RUNNER_TEMP/shadowclone" "@shadowclone/cli@0.0.27"
+          npm install --global --ignore-scripts --no-audit --no-fund --prefix "$RUNNER_TEMP/shadowclone" "@shadowclone/cli@0.0.28"
           npm install --global --no-audit --no-fund --prefix "$RUNNER_TEMP/claude" "@anthropic-ai/claude-code@2.1.286"
           echo "$RUNNER_TEMP/claude/bin" >> "$GITHUB_PATH"
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
@@ -429,7 +429,7 @@ jobs:
       - name: Install Shadowclone
         working-directory: ${{ runner.temp }}
         run: |
-          npm install --global --ignore-scripts --no-audit --no-fund --prefix "$RUNNER_TEMP/shadowclone" "@shadowclone/cli@0.0.27"
+          npm install --global --ignore-scripts --no-audit --no-fund --prefix "$RUNNER_TEMP/shadowclone" "@shadowclone/cli@0.0.28"
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
         with:
           name: review-result
